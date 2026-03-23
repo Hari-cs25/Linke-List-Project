@@ -53,6 +53,10 @@ console.log('after append fun -> ',obj)
             obj = temp;
         }
     }
+
+    function size(){
+        
+    }
     return {append, toString, prepend};
 }
 
