@@ -54,10 +54,22 @@ console.log('after append fun -> ',obj)
         }
     }
 
-    function size(){
-        
+    function size(obje = obj, count=1){
+        if(Object.values(obje).length < 1)
+            return 0; 
+
+        console.log('count -> ', count);
+        Object.values(obje).forEach(value => {
+
+            if(value === null)
+                return 1;
+
+            if(typeof value === 'object' && value != null && !Array.isArray(value))
+               return count=count+size(value, ++count);
+        });
+        // count;
     }
-    return {append, toString, prepend};
+    return {append, toString, prepend, size};
 }
 
 const list = List();
@@ -69,3 +81,4 @@ list.prepend('beta')
 list.prepend('alpha');
 
 console.log(`"${list.toString()}"`);
+console.log('number of nodes in this list: ', list.size());
