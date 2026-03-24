@@ -1,22 +1,21 @@
 function List(){// FOACTORY FUNCTION...
     let obj = {};
     let strOut = ``;
-    
+    let Tail;
+
     const append = (value)=>{
-//console.log('append fun runs..,befor append fun-> ', obj);
         if(Object.keys(obj).length === 0){
-//console.log('object empty condition...');
             obj = {value, next:null};
-//console.log('after object empty condition runss obj value is-> ', obj);
+            Tail = obj;
         }
         else{
             trev(obj)
             function trev(ob){
-//console.log('treversel fun runss...');
                 Object.entries(ob).forEach(([key, val])=>{
-                   // console.log('trevesel fun Key value ->', key);
-                    if(val === null)
-                        ob.next = {value, next:null}; 
+                    if(val === null){
+                        ob.next = {value, next:null};
+                        Tail = ob.next;
+                    } 
                     else if(typeof val==='object'&& val != null)
                         trev(val)
                 });
@@ -24,26 +23,29 @@ function List(){// FOACTORY FUNCTION...
         }
 console.log('after append fun -> ',obj)
     }
+    function toString(){
+        strOut = ``;
+        return String();
+    }
+        function String(ob = obj){
 
-    function toString(ob = obj){
-
-        if(Object.keys(ob).length === 0)
-            return null;
-        else
-            Object.entries(ob).forEach(([key,val])=>{
-                if(typeof val === 'object' && val != null && !Array.isArray(ob))
-                    toString(val);
-                else{
-                    if(val === null){
-                        strOut+=`${null}`;
-                        return strOut;
-                    }
-                    else
-                        strOut+=`(${val}) -> `;
-                   }         
-            })
-        return strOut;
-        }
+            if(Object.keys(ob).length === 0)
+                return null;
+            else
+                Object.entries(ob).forEach(([key,val])=>{
+                    if(typeof val === 'object' && val != null && !Array.isArray(ob))
+                        String(val);
+                    else{
+                        if(val === null){
+                            strOut+=`${null}`;
+                            return strOut;
+                        }
+                        else
+                            strOut+=`(${val}) -> `;
+                    }         
+                })
+            return strOut;
+            }
 
     function prepend(value){
         if(Object.values(obj).length < 1)
@@ -54,22 +56,54 @@ console.log('after append fun -> ',obj)
         }
     }
 
-    function size(obje = obj, count=1){
-        if(Object.values(obje).length < 1)
-            return 0; 
+    function size(obje = obj){
+        let count =1;
+        trev(obje);
 
-        console.log('count -> ', count);
-        Object.values(obje).forEach(value => {
-
+      function trev(object){
+        Object.values(object).forEach(value =>{
+            if(typeof value === 'object' && value != null){
+                ++count;
+                trev(value);
+            }
             if(value === null)
-                return 1;
-
-            if(typeof value === 'object' && value != null && !Array.isArray(value))
-               return count=count+size(value, ++count);
+                return;  
         });
-        // count;
+      }
+      return count;
     }
-    return {append, toString, prepend, size};
+
+    function head(){
+        if(Object.values(obj).length < 1)
+            return;
+        return obj;
+    }
+
+    function tail(){
+        return Tail;
+    }
+
+    function at(index){
+        if(index === size())
+            return tail();
+        else if(index === 1)
+            return head();
+        else
+            return treves(obj,index-1);
+    }
+
+    function treves(object, num){
+        if(num < 1)
+            return object;
+
+        Object.values(object).forEach(value => {
+            if((typeof value === 'object' && value != null && !Array.isArray(value)) && num>0)
+                return treves(value, num);
+        });
+        
+
+    }
+    return {append, toString, prepend, size, head, tail, at};
 }
 
 const list = List();
@@ -82,3 +116,16 @@ list.prepend('alpha');
 
 console.log(`"${list.toString()}"`);
 console.log('number of nodes in this list: ', list.size());
+list.append('six')
+console.log(list.toString());
+console.log(list.size());
+list.prepend('first')
+console.log(list.toString())
+console.log(list.size())
+console.log('head ->',list.head())
+console.log('Tail ->',list.tail())
+console.log('node at 1->',list.at(1));
+console.log('node at 2->',list.at(2));
+console.log('node at last index->',list.at(list.size()));
+
+
