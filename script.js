@@ -1,7 +1,8 @@
-function List(){// FOACTORY FUNCTION...
+function LinkedList(){// FOACTORY FUNCTION...
     let obj = {};
     let strOut = ``;
     let Tail;
+    let desierNode;
 
     const append = (value)=>{
         if(Object.keys(obj).length === 0){
@@ -21,8 +22,8 @@ function List(){// FOACTORY FUNCTION...
                 });
             }
         }
-console.log('after append fun -> ',obj)
     }
+
     function toString(){
         strOut = ``;
         return String();
@@ -88,44 +89,69 @@ console.log('after append fun -> ',obj)
             return tail();
         else if(index === 1)
             return head();
-        else
-            return treves(obj,index-1);
+        else{
+             treves(obj,index-1);
+             return desierNode;
+        }
     }
-
+    
     function treves(object, num){
-        if(num < 1)
-            return object;
-
-        Object.values(object).forEach(value => {
-            if((typeof value === 'object' && value != null && !Array.isArray(value)) && num>0)
-                return treves(value, num);
-        });
+       
+        if(num < 1){
+            desierNode = object;
+            return;
+        }
         
+        Object.values(object).forEach(value => {
+            if((typeof value === 'object' && value != null && !Array.isArray(value)) && num>0){
+                 treves(value, num-1);
+            }
+        });
+       } 
+     
+    function pop(){
 
+        if(Object.values(obj).length < 1)
+            return;
+        let temp = at(1);
+        obj = at(2);
+        temp.next = null;
+        return temp;
     }
-    return {append, toString, prepend, size, head, tail, at};
+
+    function contains(value){
+        return compare();
+
+        function compare(object=obj){
+            for(let val of Object.values(object)){
+                if(val === value)
+                    return true;
+                else if(val === null)
+                    return false;
+                else if(typeof val === 'object' && val != null && !Array.isArray(val))
+                    return compare(val);
+            }
+        }
+    }
+
+    function findIndex(value){
+        let count =0;
+        if(!contains(value))
+             return -1;
+        else
+            return trev();
+
+        function trev(object = obj){
+            ++count;
+            for(let val of Object.values(object)){
+                if(val === value)
+                    return count;
+                else if(typeof val === 'object'&& val != null&& !Array.isArray(val))
+                   return trev(val);
+            }
+        }   
+    }
+    return {append, toString, prepend, size, head, tail, at, pop, contains, findIndex};
 }
 
-const list = List();
-list.append('one');
-list.append('two');
-list.append('three');
-list.append('four');
-list.prepend('beta')
-list.prepend('alpha');
-
-console.log(`"${list.toString()}"`);
-console.log('number of nodes in this list: ', list.size());
-list.append('six')
-console.log(list.toString());
-console.log(list.size());
-list.prepend('first')
-console.log(list.toString())
-console.log(list.size())
-console.log('head ->',list.head())
-console.log('Tail ->',list.tail())
-console.log('node at 1->',list.at(1));
-console.log('node at 2->',list.at(2));
-console.log('node at last index->',list.at(list.size()));
-
-
+export{LinkedList};
